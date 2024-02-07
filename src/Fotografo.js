@@ -3,7 +3,7 @@ import axios from 'axios';
 function Fotografo() {
   const [fotografos, setFotografos] = useState([]);
   useEffect(() => {
-    axios.get('http://localhost:3000/fotografo')
+    axios.get('http://localhost:3001/fotografo')
       .then(response => {
         setFotografos(response.data);
       })
