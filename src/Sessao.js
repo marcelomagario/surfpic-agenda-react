@@ -1,37 +1,67 @@
 "use client";
 
-import { useState } from "react";
-import {
-  APIProvider,
-  Map,
-  AdvancedMarker,
-  Pin,
-  InfoWindow,
-} from "@vis.gl/react-google-maps";
+import { GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/api';
+import { useState, useEffect } from 'react';
 
 export default function Intro() {
-  const position = { lat: 53.54, lng: 10 };
-  const [open, setOpen] = useState(false);
+  const position = { lat: -24.013071122797122, lng: -46.27300779405361 };
+  const [isOpen, setIsOpen] = useState(false);
+  const [iconSize, setIconSize] = useState(null);
+
+  useEffect(() => {
+    if (window.google) {
+      setIconSize(new window.google.maps.Size(50, 50));
+    }
+  }, []);
+
+  const mapStyles = [
+    {
+      featureType: "poi",
+      stylers: [{ visibility: "off" }]
+    },
+    {
+      featureType: "transit",
+      elementType: "labels.icon",
+      stylers: [{ visibility: "off" }]
+    }
+  ];
+
+  const containerStyle = {
+    width: '50%',
+    height: '50vh'
+  };
 
   return (
-    <APIProvider apiKey='AIzaSyCkfG8FnNQaLpDiiRCOHRYkizjOE7anM7g'>
-      <div style={{ height: "100vh", width: "100%" }}>
-        <Map zoom={9} center={position} mapId='3bbf1b712d8bd82e'>
-          <AdvancedMarker position={position} onClick={() => setOpen(true)}>
-            <Pin
-              background={"grey"}
-              borderColor={"green"}
-              glyphColor={"purple"}
-            />
-          </AdvancedMarker>
-
-          {open && (
-            <InfoWindow position={position} onCloseClick={() => setOpen(false)}>
-              <p>I'm in Hamburg</p>
-            </InfoWindow>
-          )}
-        </Map>
+    <LoadScript googleMapsApiKey=''>
+      <div>
+        <GoogleMap
+          mapContainerStyle={containerStyle}
+          center={position}
+          zoom={16}
+          options={{ 
+            styles: mapStyles,
+            mapTypeId: 'satellite'
+          }}
+        >
+          <Marker 
+            position={position} 
+            onClick={() => setIsOpen(true)}
+            icon={{
+              url: '/path/to/icon.svg', // substitua por seu próprio ícone
+              scaledSize: iconSize
+            }}
+          >
+            {isOpen && (
+              <InfoWindow onCloseClick={() => setIsOpen(false)}>
+                <div>
+                  <h4>Informações do local</h4>
+                  <p>Algumas informações sobre este local.</p>
+                </div>
+              </InfoWindow>
+            )}
+          </Marker>
+        </GoogleMap>
       </div>
-    </APIProvider>
+    </LoadScript>
   );
 }
