@@ -1,37 +1,37 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-function Sessao() {
-  const [sessoes, setSessoes] = useState([]);
-  useEffect(() => {
-    axios.get('http://localhost:3001/sessao')
-      .then(response => {
-        setSessoes(response.data);
-      })
-      .catch(error => {
-        console.error('Erro ao buscar sessões:', error);
-      });
-  }, []);
+"use client";
+
+import { useState } from "react";
+import {
+  APIProvider,
+  Map,
+  AdvancedMarker,
+  Pin,
+  InfoWindow,
+} from "@vis.gl/react-google-maps";
+
+export default function Intro() {
+  const position = { lat: 53.54, lng: 10 };
+  const [open, setOpen] = useState(false);
+
   return (
-    <div>
-      <h1>Sessões</h1>
-      {sessoes.map(sessao => (
-        <div key={sessao.id}>
-          <h2>{sessao.data}</h2>
-          <p>Início da sesh: {sessao.hora_inicial}</p>
-          <p>Fico até as: {sessao.hora_final}</p>
-          <p>Fotografo: {sessao.nome}</p>
-          <p>Insta: {sessao.instagram}</p>
-          <p>ZAP: {sessao.whatsapp}</p>
-          <p>E-mail: {sessao.email}</p>
-          <p>Link: {sessao.email}</p>
-          <p>Praia: {sessao.nome_praia}</p>
-          <p>Latitude: {sessao.latitude}</p>
-          <p>Longitude: {sessao.longitude}</p>
-          <p>Direção ideal do swell: {sessao.direcao_ideal_swell}</p>
-          <p>Direção ideal do vento: {sessao.direcao_ideal_vento}</p>
-        </div>
-      ))}
-    </div>
+    <APIProvider apiKey='AIzaSyCkfG8FnNQaLpDiiRCOHRYkizjOE7anM7g'>
+      <div style={{ height: "100vh", width: "100%" }}>
+        <Map zoom={9} center={position} mapId='3bbf1b712d8bd82e'>
+          <AdvancedMarker position={position} onClick={() => setOpen(true)}>
+            <Pin
+              background={"grey"}
+              borderColor={"green"}
+              glyphColor={"purple"}
+            />
+          </AdvancedMarker>
+
+          {open && (
+            <InfoWindow position={position} onCloseClick={() => setOpen(false)}>
+              <p>I'm in Hamburg</p>
+            </InfoWindow>
+          )}
+        </Map>
+      </div>
+    </APIProvider>
   );
 }
-export default Sessao;

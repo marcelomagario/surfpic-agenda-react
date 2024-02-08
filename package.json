@@ -4,15 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
+    "eject": "react-app-rewired eject"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@react-google-maps/api": "^2.19.2",
+    "@vis.gl/react-google-maps": "^0.6.0",
     "axios": "^1.6.7",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -32,6 +34,7 @@
     ]
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "react-app-rewired": "^2.2.1"
   }
 }
