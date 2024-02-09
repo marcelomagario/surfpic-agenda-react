@@ -10,12 +10,12 @@ function App() {
       <div>
         <nav>
           <ul>
-            <li>
+            {/* <li>
               <Link to="/fotografo">Fotografo</Link>
             </li>
             <li>
               <Link to="/formulario-fotografo">Formulario Fotografo</Link>
-            </li>
+            </li> */}
             <li>
               <Link to="/sessao">Sessão</Link> 
             </li>

@@ -2,66 +2,67 @@
 
 import { GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/api';
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 
-export default function Intro() {
-  const position = { lat: -24.013071122797122, lng: -46.27300779405361 };
-  const [isOpen, setIsOpen] = useState(false);
-  const [iconSize, setIconSize] = useState(null);
+export default function Mapa() {
+  const [sessoes, setSessoes] = useState([]);
+  const [selectedSessao, setSelectedSessao] = useState(null);
 
   useEffect(() => {
-    if (window.google) {
-      setIconSize(new window.google.maps.Size(50, 50));
-    }
+    axios.get('http://localhost:3001/sessao')
+      .then(response => {
+        setSessoes(response.data);
+      })
+      .catch(error => {
+        console.error('Erro ao buscar sessões:', error);
+      });
   }, []);
 
-  const mapStyles = [
-    {
-      featureType: "poi",
-      stylers: [{ visibility: "off" }]
-    },
-    {
-      featureType: "transit",
-      elementType: "labels.icon",
-      stylers: [{ visibility: "off" }]
-    }
-  ];
-
   const containerStyle = {
-    width: '50%',
-    height: '50vh'
+    width: '100%',
+    height: '100vh'
+  };
+
+  const center = {
+    lat: -24.013071122797122, 
+    lng: -46.27300779405361
   };
 
   return (
-    <LoadScript googleMapsApiKey=''>
-      <div>
-        <GoogleMap
-          mapContainerStyle={containerStyle}
-          center={position}
-          zoom={16}
-          options={{ 
-            styles: mapStyles,
-            mapTypeId: 'satellite'
-          }}
-        >
+    <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}>
+      <GoogleMap
+        mapContainerStyle={containerStyle}
+        center={center}
+        zoom={10}
+      >
+        {sessoes.map(sessao => (
           <Marker 
-            position={position} 
-            onClick={() => setIsOpen(true)}
-            icon={{
-              url: '/path/to/icon.svg', // substitua por seu próprio ícone
-              scaledSize: iconSize
+            key={sessao.}
+            position={{ lat: sessao.latitude, lng: sessao.longitude }}
+            onClick={() => {
+              setSelectedSessao(sessao);
+            }}
+          />
+        ))}
+
+        {selectedSessao && (
+          <InfoWindow
+            position={{ lat: selectedSessao.latitude, lng: selectedSessao.longitude }}
+            onCloseClick={() => {
+              setSelectedSessao(null);
             }}
           >
-            {isOpen && (
-              <InfoWindow onCloseClick={() => setIsOpen(false)}>
-                <div>
-                  <h4>Informações do local</h4>
-                  <p>Algumas informações sobre este local.</p>
-                </div>
-              </InfoWindow>
-            )}
-          </Marker>
-        </GoogleMap>
-      </div>
+            <div>
+              <p>Início da sesh: {selectedSessao.hora_inicial}</p>
+              <p>Fico até as: {selectedSessao.hora_final}</p>
+              <p>Fotografo: {selectedSessao.nome}</p>
+              <p>Praia: {selectedSessao.nome_praia}</p>
+              <p>Latitude: {selectedSessao.latitude}</p>
+              <p>Longitude: {selectedSessao.longitude}</p>
+            </div>
+          </InfoWindow>
+        )}
+      </GoogleMap>
     </LoadScript>
   );
 }
