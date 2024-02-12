@@ -10,14 +10,14 @@ function App() {
       <div>
         <nav>
           <ul>
-            {/* <li>
-              <Link to="/fotografo">Fotografo</Link>
+            <li>
+              <Link to="/fotografo">Fotografos</Link>
             </li>
             <li>
-              <Link to="/formulario-fotografo">Formulario Fotografo</Link>
-            </li> */}
+              <Link to="/formulario-fotografo"> Olá Fotografo! Cadastre-se e comece a usar o app!</Link>
+            </li>
             <li>
-              <Link to="/sessao">Sessão</Link> 
+              <Link to="/sessao">Próximas sessões</Link> 
             </li>
           </ul>
         </nav>

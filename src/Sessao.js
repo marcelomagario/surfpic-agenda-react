@@ -15,12 +15,19 @@ function Sessao() {
         console.error('Erro ao buscar sessões:', error);
       });
   }, []);
+
+function formatDate(dateString) {
+  const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+  return new Date(dateString).toLocaleDateString('pt-BR', options);
+}
+
+
   return (
     <div>
       <h1>Sessões</h1>
       {sessoes.map(sessao => (
         <div key={sessao.id}>
-          <h2>{sessao.data}</h2>
+          <h2>{formatDate(sessao.data)}</h2>
           <p>Praia: {sessao.nome_praia}</p>
           <p>Início da sesh: {sessao.hora_inicial}</p>
           <p>Fico até as: {sessao.hora_final}</p>
