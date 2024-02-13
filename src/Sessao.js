@@ -7,7 +7,8 @@ import axios from 'axios';
 
 function Sessao() {
   const [sessoes, setSessoes] = useState([]);
-  const [sessaoSelecionada, setSessaoSelecionada] = useState(null);
+  const [sessaoSelecionadaNaLista, setSessaoSelecionadaNaLista] = useState(null);
+
 
   useEffect(() => {
     axios.get('http://localhost:3001/sessao')
@@ -31,19 +32,19 @@ return (
     <h1 class='h1'>Sessões</h1>
     {sessoes.map(sessao => {
       const dataSessao = new Date(sessao.data);
-      if (dataSessao > dataAtual) {
+      if (dataSessao >= dataAtual) {
         return (
-          <div class='sessao' key={sessao.id}>
+          <div class='sessao' key={sessao.sessao_id}>
              <h2 onClick={() => {
-              if (sessaoSelecionada === sessao.id) {
-                setSessaoSelecionada(null); // Esconde as informações se a sessão já está selecionada
+              if (sessaoSelecionadaNaLista === sessao.sessao_id) {
+                setSessaoSelecionadaNaLista(null); // Esconde as informações se a sessão já está selecionada
               } else {
-                setSessaoSelecionada(sessao.id); // Mostra as informações se a sessão não está selecionada
+                setSessaoSelecionadaNaLista(sessao.sessao_id); // Mostra as informações se a sessão não está selecionada
               }
             }}>
               {formatDate(sessao.data)}
             </h2>
-            {sessaoSelecionada === sessao.id && (
+            {sessaoSelecionadaNaLista === sessao.sessao_id && (
               <>
                 <p>Praia: {sessao.nome_praia}</p>
                 <p>Início da sesh: {sessao.hora_inicial}</p>
@@ -66,7 +67,7 @@ return (
 
 export default function Mapa() {
   const [sessoes, setSessoes] = useState([]);
-  const [selectedSessao, setSelectedSessao] = useState(null);
+  const [sessaoSelecionadaNoMapa, setSessaoSelecionadaNoMapa] = useState(null);
   const mapRef = useRef();
 
   useEffect(() => {
@@ -109,23 +110,23 @@ export default function Mapa() {
               key={sessao.sessao_id}
               position={{ lat: sessao.latitude, lng: sessao.longitude }}
               onClick={() => {
-                setSelectedSessao(sessao);
+                setSessaoSelecionadaNoMapa(sessao); // Corrigido aqui
               }}
             />
           ))}
 
-          {selectedSessao && (
+          {sessaoSelecionadaNoMapa && (
             <InfoWindow
-              position={{ lat: selectedSessao.latitude, lng: selectedSessao.longitude }}
+              position={{ lat: sessaoSelecionadaNoMapa.latitude, lng: sessaoSelecionadaNoMapa.longitude }}
               onCloseClick={() => {
-                setSelectedSessao(null);
+                setSessaoSelecionadaNoMapa(null);
               }}
             >
               <div>
-                <p>Início da sesh: {selectedSessao.hora_inicial}</p>
-                <p>Fico até as: {selectedSessao.hora_final}</p>
-                <p>Fotografo: {selectedSessao.nome}</p>
-                <p>Praia: {selectedSessao.nome_praia}</p>
+                <p>Início da sesh: {sessaoSelecionadaNoMapa.hora_inicial}</p>
+                <p>Fico até as: {sessaoSelecionadaNoMapa.hora_final}</p>
+                <p>Fotografo: {sessaoSelecionadaNoMapa.nome}</p>
+                <p>Praia: {sessaoSelecionadaNoMapa.nome_praia}</p>
               </div>
             </InfoWindow>
           )}
